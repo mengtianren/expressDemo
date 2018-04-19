@@ -6,7 +6,10 @@
     "start": "babel-node server.js --presets es2015,stage-2"
   },
   "dependencies": {
+    "connect-mongo": "^2.0.1",
+    "cookie-parser": "^1.4.3",
     "express": "~4.16.0",
+    "express-session": "^1.15.6",
     "md5": "^2.2.1",
     "mongoose": "^5.0.15"
   },
