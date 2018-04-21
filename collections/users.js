@@ -1,7 +1,7 @@
 import md5 from 'md5'
 
 import User from '../models/users'
-
+import City from '../models/city'
 class Users {
     constructor(){
         this.register = this.register.bind(this)
@@ -16,20 +16,18 @@ class Users {
         }else{
             let pass = md5(query.password);
             query.password = pass;
-            User.create(query,async (error)=>{
+            User.create(query,async (error,data)=>{
                 if(error){
                     response.status(500).json(error)
                 }else{
-                    let list = await User.findOne({phone:query.phone});
-                        // console.log(list)
                     response.status(200).json({
                         code:1,
                         message:'注册成功',
                         data:{
-                            nickName:list.nickName,
-                            sex:list.sex,
-                            headImg:list.headImg,
-                            phone:list.phone
+                            nickName:data.nickName,
+                            sex:data.sex,
+                            headImg:data.headImg,
+                            phone:data.phone
                         }
                     })
                 }
@@ -38,7 +36,7 @@ class Users {
     }
 
     async login(request,response){
-        console.log('denglu',request)
+        // console.log('denglu',request)
         let query = request.body.params||request.query;
         if(!query.phone||!query.password){
             response.status(200).json({
@@ -49,11 +47,16 @@ class Users {
         }
         let pass = query.password;
         query.password = md5(pass);
-        // console.log('==========',query)
         let userLogin = await User.findOne({phone:query.phone,password:query.password});
-        // console.log(userLogin)
         if(userLogin){
-            request.session.user = userLogin.phone
+            request.session.user =  userLogin   //设置当前用户session
+            // console.log(request.session)
+            // User.update({phone:query.phone},{$set:{homes:'5ad864e75d33021f84891109'}},(err,data)=>{
+            //     console.log(data,'===========')
+            // })
+            User.find({phone:query.phone}).populate('homes','createTime').exec((err,data)=>{
+                console.log(err,data)
+            })
             response.status(200).json({
                 code:1,
                 message:'登陆成功',
@@ -62,7 +65,7 @@ class Users {
                     sex:userLogin.sex,
                     headImg:userLogin.headImg,
                     phone:userLogin.phone,
-                    session:request.session.user
+                    city:userLogin.city
                 }
             })
         }else{

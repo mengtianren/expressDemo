@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import cookieParser from 'cookie-parser'
-// import connectMongo from 'connect-mongo';
+import connectMongo from 'connect-mongo';
 
 
 import user from './routes/users'
@@ -35,36 +35,20 @@ app.use(bodyParser.json());
  *
  * @type {*|name:cookie属性名，secret：作为服务器端生成session的签名}
  */
-// const MongoStore = connectMongo(session);
-app.use(cookieParser('keyboard cat'))
+const MongoStore = connectMongo(session);
+app.use(cookieParser('keyboard'))
 app.use(session({
     resave: false,  //重新保存
-    saveUninitialized: true, //
-    secret: 'keyboard cat',//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。
-    cookie:{ maxAge: 1000*60*60*24}//失效时间
-}))
-app.use(function (req, res, next) {
-    var token = req.session.user;
-   // console.log(req.session,123)
-    //判断是否登录入
-    if(!token){
-        token = req.session.token = null;
-        res.locals.user=null;
-        app.locals.user=null;
-        // console.log('您还未登陆')
-        // ///member和admin的路径登录后才能进入
-        // if(/^\/member/g.test(pathname)||/^\/admin/g.test(pathname)){
-        //     //跳出
-        //     return res.redirect('/login');
-        // }else{
-        //     next();
-        //
-        next();
-    }else if(token) {
-
-        next();
-    }
+    saveUninitialized: false, //
+    secret: 'keyboard',//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。
+    cookie:{ maxAge: 1000*60*60*24},//失效时间
+    store: new MongoStore({
+        url:'mongodb://admin:admin@119.23.60.174:27017/admin',
+        collection:'session',
+        mongooseConnection:db
     })
+}))
+
 
 
 
