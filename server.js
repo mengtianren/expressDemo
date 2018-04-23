@@ -7,6 +7,7 @@ import connectMongo from 'connect-mongo';
 
 import user from './routes/users'
 import home from './routes/home'
+import city from './routes/city'
 
 import db from './db/db'
 
@@ -60,6 +61,7 @@ const port = process.env.PORT||3000;
 
 app.use('/api/v1/user',user)
 app.use('/api/v1/home',home)
+app.use('/api/v1/city',city)
 app.listen(port)
 
 console.log(`当前监听的端口号是${port}`)

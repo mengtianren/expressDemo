@@ -51,10 +51,10 @@ class Users {
         if(userLogin){
             request.session.user =  userLogin   //设置当前用户session
             // console.log(request.session)
-            // User.update({phone:query.phone},{$set:{homes:'5ad864e75d33021f84891109'}},(err,data)=>{
+            // User.update({phone:query.phone},{$set:{citys:'5add3f7238b03118ac545023'}},(err,data)=>{
             //     console.log(data,'===========')
             // })
-            User.find({phone:query.phone}).populate('homes','createTime').exec((err,data)=>{
+            User.find({phone:query.phone}).populate('citys','name').exec((err,data)=>{
                 console.log(err,data)
             })
             response.status(200).json({
@@ -65,7 +65,7 @@ class Users {
                     sex:userLogin.sex,
                     headImg:userLogin.headImg,
                     phone:userLogin.phone,
-                    city:userLogin.city
+                    citys:userLogin.citys
                 }
             })
         }else{
