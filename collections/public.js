@@ -11,7 +11,7 @@ class Public {
             request.session.user = null;
             response.locals.user=null;
             console.log('您还未登陆')
-            response.status(500).json({
+            response.status(401).json({
                 code:0,
                 message:'登陆失效或未登录',
                 data:{}

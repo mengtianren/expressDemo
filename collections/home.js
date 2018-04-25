@@ -15,7 +15,7 @@ class Homes {
                data:img
            })
        }catch(error) {
-           response.status(500).json({
+           response.status(401).json({
                code:0,
                message:error.message,
                data:[]
@@ -35,7 +35,7 @@ class Homes {
                 data
             })
         }else{
-            response.status(500).json({
+            response.status(401).json({
                 code:0,
                 message:'添加失败',
                 data:[]

@@ -1,7 +1,8 @@
 import md5 from 'md5'
 
 import User from '../models/users'
-import City from '../models/city'
+
+
 class Users {
     constructor(){
         this.register = this.register.bind(this)
@@ -18,7 +19,7 @@ class Users {
             query.password = pass;
             User.create(query,async (error,data)=>{
                 if(error){
-                    response.status(500).json(error)
+                    response.status(401).json(error)
                 }else{
                     response.status(200).json({
                         code:1,
@@ -34,10 +35,9 @@ class Users {
             })
         }
     }
-
     async login(request,response){
-        // console.log('denglu',request)
-        let query = request.body.params||request.query;
+        let query = request.body||request.query;
+        console.log(query)
         if(!query.phone||!query.password){
             response.status(200).json({
                 code:0,
@@ -45,35 +45,32 @@ class Users {
             })
             return
         }
-        let pass = query.password;
-        query.password = md5(pass);
-        let userLogin = await User.findOne({phone:query.phone,password:query.password});
-        if(userLogin){
-            request.session.user =  userLogin   //设置当前用户session
-            // console.log(request.session)
-            // User.update({phone:query.phone},{$set:{citys:'5add3f7238b03118ac545023'}},(err,data)=>{
-            //     console.log(data,'===========')
-            // })
-            User.find({phone:query.phone}).populate('citys','name').exec((err,data)=>{
-                console.log(err,data)
-            })
-            response.status(200).json({
-                code:1,
-                message:'登陆成功',
-                data:{
-                    nickName:userLogin.nickName,
-                    sex:userLogin.sex,
-                    headImg:userLogin.headImg,
-                    phone:userLogin.phone,
-                    citys:userLogin.citys
-                }
-            })
-        }else{
-            response.status(500).json({
-                code:0,
-                message:'登陆失败'
-            })
-        }
+        User.find({phone:query.phone,password:md5(query.password)},{password:0})
+            .populate('citys','name').exec((err,data)=>{
+            console.log(err,data)
+            if(err){
+                response.status(401).json({
+                    code:0,
+                    message:'登陆失败',
+                    data:err.meassage
+                })
+            }else{
+              if(data.length !== 0){
+                  request.session.user =  data   //设置当前用户session
+                  response.status(200).json({
+                      code:1,
+                      message:'登陆成功',
+                      data
+                  })
+              }else{
+                  response.status(401).json({
+                      code:0,
+                      message:'用户不存在或密码错误',
+                      data:[]
+                  })
+              }
+            }
+        })
     }
     async modify(request,response){
         let query = request.query;
@@ -90,19 +87,38 @@ class Users {
                     data
                 })
             }else{
-                response.status(500).json({
+                response.status(401).json({
                     code:0,
                     message:'修改失败',
                     data
                 })
             }
         }else{
-            response.status(500).json({
+            response.status(401).json({
                 code:0,
                 message:'修改失败',
                 data
             })
         }
+    }
+    async getUser(request,response){
+        User.findById('5adef2a5c8601b15b0ca35c4',{password:0})
+            .populate('citys','name').exec((err,data)=>{
+            console.log(err,data)
+            if(err){
+                response.status(401).json({
+                    code:0,
+                    message:'获取信息失败',
+                    data:err.meassage
+                })
+            }else{
+                response.status(200).json({
+                    code:1,
+                    message:'获取信息成功',
+                    data
+                })
+            }
+        })
     }
 
 

@@ -10,7 +10,7 @@ class Citys  {
     async getCity(request,response){
         City.find({},(err,data)=>{
             if(err){
-                response.status(500).json({
+                response.status(401).json({
                     code:0,
                     message:'获取列表失败，请稍后再试',
                     data:[]
@@ -30,7 +30,7 @@ class Citys  {
         if(query.name){
             let findOne = await City.findOne({name:query.name});
             if(findOne){
-                response.status(500).json({
+                response.status(401).json({
                     code:0,
                     message:'城市已存在',
                     data:findOne
@@ -39,7 +39,7 @@ class Citys  {
             }
             City.create({name:query.name},(err,data)=>{
                 if(err){
-                    response.status(500).json({
+                    response.status(401).json({
                         code:0,
                         message:'添加失败',
                         data:{}
@@ -60,7 +60,7 @@ class Citys  {
         if(query.new_name&&query.old_name){
             City.update({name:query.old_name},{$set:{name:query.new_name}},(err,data)=>{
                 if(err){
-                    response.status(500).json({
+                    response.status(401).json({
                         code:0,
                         message:'修改失败，请稍后再试',
                         data:{}
@@ -86,7 +86,7 @@ class Citys  {
         if(query.name){
             City.remove({name:query.name},(err,data)=>{
                 if(err){
-                    response.status(500).json({
+                    response.status(401).json({
                         code:0,
                         message:'删除失败，请稍后再试',
                         data:{},
