@@ -37,7 +37,7 @@ const MongoStore = connectMongo(session);  //在mongodb里面生成表存储用�
 app.use(cookieParser('myapp')) //读取设置myapp的cookie对应的session，如果cookie发生改变则重新生成cookie
 app.use(session({
     resave: false,  //重新保存
-    saveUninitialized: false, //
+    saveUninitialized: false, //s是否缓存到本地
     secret: 'myapp',//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。
     cookie:{ maxAge: 1000*60*60*24},//失效时间
     store: new MongoStore({

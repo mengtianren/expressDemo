@@ -26,7 +26,8 @@ class Citys  {
         })
     }
     async addCity(request,response){
-        let query = await request.query;
+        let query = await request.body||request.query;
+        console.log(query)
         if(query.name){
             let findOne = await City.findOne({name:query.name});
             if(findOne){
@@ -82,9 +83,9 @@ class Citys  {
         }
     }
     async delCity(request,response){
-        let query = request.query;
-        if(query.name){
-            City.remove({name:query.name},(err,data)=>{
+        let query = await request.body||request.query;
+        if(query.id){
+            City.remove({_id:query.id},(err,data)=>{
                 if(err){
                     response.status(401).json({
                         code:0,

@@ -39,24 +39,25 @@ class Users {
         let query = request.body||request.query;
         console.log(query)
         if(!query.phone||!query.password){
-            response.status(200).json({
+            response.status(401).json({
                 code:0,
-                message:'账号或密码不能为空'
+                message:'账号或密码不能为空',
+                data:{}
             })
             return
         }
-        User.find({phone:query.phone,password:md5(query.password)},{password:0})
+        User.findOne({phone:query.phone,password:md5(query.password)},{password:0})
             .populate('citys','name').exec((err,data)=>{
-            console.log(err,data)
             if(err){
                 response.status(401).json({
                     code:0,
-                    message:'登陆失败',
-                    data:err.meassage
+                    message:err.meassage,
+                    data:{}
                 })
             }else{
               if(data.length !== 0){
-                  request.session.user =  data   //设置当前用户session
+                  request.session.user = data   //设置当前用户session
+                  console.log(request.session.user,"session")
                   response.status(200).json({
                       code:1,
                       message:'登陆成功',
@@ -118,6 +119,23 @@ class Users {
                     data
                 })
             }
+        })
+    }
+    async adminGetUserList(request,response){
+        User.find({}).populate('citys','name').exec((err,data)=>{
+            if(err){
+                respoonse.status(400).json({
+                    code:0,
+                    message:'获取失败',
+                    data:[]
+                })
+                return
+            }
+            response.status(200).json({
+                code:1,
+                message:'获取成功',
+                data
+            })
         })
     }
 

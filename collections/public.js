@@ -7,10 +7,11 @@ class Public {
     async login(request,response,next){
         let user = request.session.user;
         //判断是否登录入
+        console.log(user,'登陆判断=========')
         if(!user){
             request.session.user = null;
             response.locals.user=null;
-            console.log('您还未登陆')
+            // console.log('您还未登陆')
             response.status(401).json({
                 code:0,
                 message:'登陆失效或未登录',
