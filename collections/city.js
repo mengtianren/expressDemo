@@ -1,104 +1,60 @@
-import express from 'express'
-
 
 import City from '../models/city'
+import Publice from "../util/publiceData";
 
 class Citys  {
     constructor(){
 
     }
-    async getCity(request,response){
+     getCity = async(request,response) => {
         City.find({},(err,data)=>{
             if(err){
-                response.status(401).json({
-                    code:0,
-                    message:'获取列表失败，请稍后再试',
-                    data:[]
-                })
-                return
+                Publice.returnJSON(response,401,0,'获取列表失败，请稍后再试',[])
             }else{
-                response.status(200).json({
-                    code:1,
-                    message:'获取列表成功',
-                    data:data
-                })
+                Publice.returnJSON(response,200,1,'获取列表成功',data)
             }
         })
     }
-    async addCity(request,response){
+     addCity = async(request,response) => {
         let query = await request.body||request.query;
         console.log(query)
         if(query.name){
             let findOne = await City.findOne({name:query.name});
             if(findOne){
-                response.status(401).json({
-                    code:0,
-                    message:'城市已存在',
-                    data:findOne
-                })
+                Publice.returnJSON(response,401,0,'城市已存在',findOne)
                 return
             }
             City.create({name:query.name},(err,data)=>{
                 if(err){
-                    response.status(401).json({
-                        code:0,
-                        message:'添加失败',
-                        data:{}
-                    })
-                    return
+                    Publice.returnJSON(response,401,0,err.message,{})
                 }else{
-                    response.status(200).json({
-                        code:0,
-                        message:'添加成功',
-                        data:data
-                    })
+                    Publice.returnJSON(response,200,1,'添加成功',data)
                 }
             })
         }
     }
-    async updCity(request,response){
-        let query = await request.query;
+     updCity = async(request,response) => {
+        let query = awaitrequest.body || request.query;
         if(query.new_name&&query.old_name){
             City.update({name:query.old_name},{$set:{name:query.new_name}},(err,data)=>{
                 if(err){
-                    response.status(401).json({
-                        code:0,
-                        message:'修改失败，请稍后再试',
-                        data:{}
-                    })
-                    return
+                    Publice.returnJSON(response,401,0,'修改失败，请稍后再试',{})
                 }else{
-                    response.status(200).json({
-                        code:1,
-                        message:'修改成功',
-                        data:{}
-                    })
+                    Publice.returnJSON(response,200,1,'修改成功',{})
                 }
             })
         }else{
-            response.status(404).json({
-                code:0,
-                message:"请确认old_name和new_name的值存在"
-            })
+            Publice.returnJSON(response,404,0,'请确认old_name和new_name的值存在',{})
         }
     }
-    async delCity(request,response){
+     delCity = async(request,response) => {
         let query = await request.body||request.query;
         if(query.id){
             City.remove({_id:query.id},(err,data)=>{
                 if(err){
-                    response.status(401).json({
-                        code:0,
-                        message:'删除失败，请稍后再试',
-                        data:{},
-                    })
-                    return
+                    Publice.returnJSON(response,401,0,'删除失败，请稍后再试',{})
                 }else{
-                    response.status(200).json({
-                        code:1,
-                        message:'删除成功',
-                        data:{}
-                    })
+                    Publice.returnJSON(response,200,1,'删除成功',{})
                 }
             })
         }

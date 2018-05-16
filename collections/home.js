@@ -1,45 +1,27 @@
 
 import Home from '../models/home'
-
+import Publice from '../util/publiceData'
 class Homes {
     constructor(){
-        this.carousel = this.carousel.bind(this)
+
     }
-    async carousel(request,response){
-        console.log('carousel')
+     carousel = async(request,response) => {
        try {
            let img = await Home.find()
-           response.status(200).json({
-               code:1,
-               message:'获取成功',
-               data:img
-           })
+           Publice.returnJSON(response,200,1,'获取成功',img)
        }catch(error) {
-           response.status(401).json({
-               code:0,
-               message:error.message,
-               data:[]
-           })
+           Publice.returnJSON(response,401,0,error.message,[])
        }
     }
-    async carouselStore(request,response){
-        let query = request.body.params||request.query;
-
+     carouselStore = async(request,response) => {
+        let query = await request.body||request.query;
         let create = await Home.create(query)
         console.log(create)
         if(create){
             let data = await Home.find()
-            response.status(200).json({
-                code:1,
-                message:'添加成功',
-                data
-            })
+            Publice.returnJSON(response,200,1,'添加成功',data)
         }else{
-            response.status(401).json({
-                code:0,
-                message:'添加失败',
-                data:[]
-            })
+            Publice.returnJSON(response,401,0,'添加失败',[])
         }
 
     }

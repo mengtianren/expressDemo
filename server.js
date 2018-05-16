@@ -41,7 +41,7 @@ app.use(session({
     secret: 'myapp',//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。
     cookie:{ maxAge: 1000*60*60*24},//失效时间
     store: new MongoStore({
-        url:'mongodb://admin:admin@127.0.0.1:27017/admin',
+        url:'mongodb://admin:admin@127.0.01:27017/admin',
         collection:'session',
         mongooseConnection:db
     })

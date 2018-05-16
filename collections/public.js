@@ -1,22 +1,17 @@
-
+import { ThePublic} from '../util/publiceData'
 
 class Public {
     constructor(){
 
     }
-    async login(request,response,next){
-        let user = request.session.user;
+     login = async(request,response,next) => {
+        let user = await request.session.user;
         //判断是否登录入
         console.log(user,'登陆判断=========')
         if(!user){
             request.session.user = null;
             response.locals.user=null;
-            // console.log('您还未登陆')
-            response.status(401).json({
-                code:0,
-                message:'登陆失效或未登录',
-                data:{}
-            })
+            ThePublic.returnJSON(response,401,0,'登陆失效或未登录',{})
             return
         }else if(user) {
             console.log(`${user.phone}已处于登录状态`)

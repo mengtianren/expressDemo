@@ -1,65 +1,42 @@
 
 import Comment from '../models/comment'
+import Publice from "../util/publiceData";
 
 class Comments {
     constructor(){
 
     }
-    async addComment(request,response){
-        let query =request.body||request.query;
+     addComment = async(request,response) => {
+        let query = await request.body || request.query;
         //||!query.user 暂时谁都可以评论
         console.log(request.query,request.body,query)
         if(!query.content||!query.article){
-            response.status(401).json({
-                code:0,
-                message:'添加信息不完善',
-                data:{}
-            })
+            Publice.returnJSON(response,401,0,'添加信息不完善',{})
             return
         }
         query.create_time = Date.parse(new Date())
-        Comment.create(query,(err,data)=>{
+        Comment.create(query,(err,data) => {
             if(err){
-                response.status(500).json({
-                    code:0,
-                    message:err.message,
-                    data:{}
-                })
+                Publice.returnJSON(response,500,0,err.message,{})
                 return
             }
-            response.status(200).json({
-                code:1,
-                message:'添加成功',
-                data
-            })
+            Publice.returnJSON(response,200,1,'添加成功',data)
         })
     }
-    async getComment(request,response){
+     getComment = async(request,response) => {
         let query = request.query
         if(!query.article){
-            response.status(401).json({
-                code:0,
-                message:'article 不存在',
-                data:[]
-            })
+            Publice.returnJSON(response,401,0,'article 不存在',[])
             return
         }
         Comment.find({article:query.article})
             .populate('user',['headImg','sex','nickName','phone'])
             .exec((err,data)=>{
             if(err){
-                response.status(500).json({
-                    code:0,
-                    message:err.meassage,
-                    data:[]
-                })
+                Publice.returnJSON(response,500,0,err.meassage,[])
                 return
             }
-            response.status(200).json({
-                code:1,
-                message:'获取评论成功',
-                data
-            })
+            Publice.returnJSON(response,200,1,'获取评论成功',data)
         })
     }
 }
