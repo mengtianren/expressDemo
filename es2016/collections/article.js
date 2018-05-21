@@ -21,6 +21,7 @@ class Articles {
             Publice.returnJSON(response,200,1,'添加成功',data)
         })
     }
+    // 列表
      getArticle = async(request,response) => {
         Article.find({})
             .populate('user',['headImg','sex','nickName','phone']).exec((err,data)=>{
@@ -32,17 +33,27 @@ class Articles {
         })
     }
      getDetail = async(request,response) => {
-        let query = request.body || request.query ;
+        let query = request.query ;
         Article.update({_id:query.id},{$inc:{watch_num:1}},(err,data)=>{
             console.log(err,data)
         })
-        Article.findById(query.id)
-            .populate('user',['headImg','sex','nickName','phone']).exec((err,data)=>{
+
+        Article.findById(query.id).populate('user',['headImg','sex','nickName','phone']).exec((err,data)=>{
             if(err){
                 Publice.returnJSON(response,500,0,err.message,{})
                 return
             }
             Publice.returnJSON(response,200,1,'获取详情成功',data)
+        })
+    }
+    getHot = async(request,response) => {
+        Article.find({watch_num:{$gt:10}})
+            .populate('user',['headImg','sex','nickName','phone']).exec((err,data)=>{
+            if(err){
+                Publice.returnJSON(response,500,0,err.message,[])
+                return
+            }
+            Publice.returnJSON(response,200,1,'获取热门成功',data)
         })
     }
     delArticle =  async(request,response) => {

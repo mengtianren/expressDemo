@@ -11,6 +11,7 @@ const userSchema = new Schema({
     sex:{default:'男',type:String},
     nickName:{default:'暂无昵称',type:String},
     text:{default:'格言：配不上了自己的野心和辜负了所受的苦难。',type:String},
+    isAdmin:{default:0,type:Number},
     citys:{
         type: Schema.Types.ObjectId,
         ref:'city'  //取值为数据库名字少个s mongoose.model('city') 取得为‘home’并不是export default 出去的值

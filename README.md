@@ -16,6 +16,8 @@
 * ---使用cookie-parser 把服务器对应session的cookie缓存客户端
 * ---使用connect-mongo 把用户登陆token放到mongoodb里面的某一个库里面
 
+# 由于pm2不支持es6语法 所以要在本地编译一下 babel es2016 -d es2015
+
 # 部分用户接口
 * /api/vi/user/register POST 注册接口params: phone,password
 * /api/vi/user/login POST 注册接口params: phone,password

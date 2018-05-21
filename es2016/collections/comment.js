@@ -9,11 +9,15 @@ class Comments {
      addComment = async(request,response) => {
         let query = await request.body || request.query;
         //||!query.user 暂时谁都可以评论
-        console.log(request.query,request.body,query)
         if(!query.content||!query.article){
             Publice.returnJSON(response,401,0,'添加信息不完善',{})
             return
         }
+        if(!query.user){
+            Publice.returnJSON(response,401,0,'请登陆后再试',{})
+            return
+        }
+        console.log(query,'=========')
         query.create_time = Date.parse(new Date())
         Comment.create(query,(err,data) => {
             if(err){

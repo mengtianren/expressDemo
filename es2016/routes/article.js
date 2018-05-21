@@ -8,5 +8,6 @@ articleRouter.get('/getarticle',Articles.getArticle)    //查
 articleRouter.post('/delarticle',Articles.delArticle)   //删
 articleRouter.post('/uptarticle',Articles.uptArticle)   //修
 articleRouter.get('/getdetail',Articles.getDetail)
+articleRouter.get('/gethot',Articles.getHot)
 
 export default articleRouter

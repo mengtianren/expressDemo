@@ -10,7 +10,6 @@ const userRouter = express.Router();
 userRouter.post('/register',Users.register)
 userRouter.post('/login',Users.login)
 userRouter.post('/modify',Public.login,Users.modify)
-userRouter.get('/getuser',Users.getUser)
 userRouter.post('/list',Public.login,Users.adminGetUserList)
 
 export default userRouter

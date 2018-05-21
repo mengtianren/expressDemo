@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "babel-node server.js --presets es2015,stage-2"
+    "start": "babel-node es2016/server.js",
+    "build":"babel es2016 -d es2015"
   },
   "dependencies": {
     "connect-mongo": "^2.0.1",

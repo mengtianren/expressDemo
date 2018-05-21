@@ -14,7 +14,6 @@ class Users {
          console.log(123)
         let Msg = await User.findOne({phone:query.phone});
         if(Msg){
-            console.log('321')
             Publice.returnJSON(response,200,0,'用户已存在',[])
         }else{
             let pass = md5(query.password);
@@ -23,13 +22,8 @@ class Users {
                 if(error){
                     Publice.returnJSON(response,401,0,'',error)
                 }else{
-                    let data = {
-                            nickName:data.nickName,
-                            sex:data.sex,
-                            headImg:data.headImg,
-                            phone:data.phone
-                        }
-                    Publice.returnJSON(response,200,1,'注册成功',data)
+
+                    Publice.returnJSON(response,200,1,'注册成功',{})
                 }
             })
         }
@@ -46,7 +40,7 @@ class Users {
             if(err){
                 Publice.returnJSON(response,401,0,err.meassage,{})
             }else{
-              if(data.length !== 0){
+              if(data){
                   request.session.user = data   //设置当前用户session
                   Publice.returnJSON(response,200,1,'登陆成功',data)
               }else{
@@ -70,16 +64,6 @@ class Users {
         }else{
             Publice.returnJSON(response,401,0,'修改失败',data)
         }
-    }
-     getUser = async(request,response) => {
-        User.findById('5adef2a5c8601b15b0ca35c4',{password:0})
-            .populate('citys','name').exec((err,data) => {
-            if(err){
-                Publice.returnJSON(response,401,0,'获取信息失败',err.meassage)
-            }else{
-                Publice.returnJSON(response,200,1,'获取信息成功',data)
-            }
-        })
     }
      adminGetUserList = async(request,response) => {
         User.find({}).populate('citys','name').exec((err,data)=>{
