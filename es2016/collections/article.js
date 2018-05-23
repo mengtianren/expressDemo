@@ -23,7 +23,13 @@ class Articles {
     }
     // 列表
      getArticle = async(request,response) => {
-        Article.find({})
+         let query = request.query ;
+         if(query.tag == 'undefined'){
+             delete query.tag
+         }
+
+         console.log(query)
+        Article.find(query)
             .populate('user',['headImg','sex','nickName','phone']).exec((err,data)=>{
             if(err){
                 Publice.returnJSON(response,500,0,err.message,[])

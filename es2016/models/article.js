@@ -7,6 +7,7 @@ const articleSchema = new Schema({
     content:{type:String,default:'this is content'},
     watch_num:{type:Number,default:1},
     create_time:{type:Number,default:Date.parse(new Date())},
+    tag:{type:String,default:'web'},
     user:{type:Schema.Types.ObjectId,ref:'user'}
 })
 
